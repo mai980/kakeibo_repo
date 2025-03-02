@@ -52,7 +52,7 @@ with tab1:
 
         if submitted:
             time_now = datetime.now().strftime("%H:%M:%S")  # hh:mm:ss 形式の時刻取得
-            new_data = pd.DataFrame([[date, time_now, category_large, category_small, amount, memo, name]], 
+            new_data = pd.DataFrame([[date, time_now, amount, category_large, category_small,  memo, name]], 
                                     columns=["年月日", "入力時間", "金額", "大項目", "中項目", "メモ", "氏名"])
             st.session_state.data = pd.concat([st.session_state.data, new_data], ignore_index=True)
             save_data()  # データ保存
