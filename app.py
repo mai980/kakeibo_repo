@@ -14,7 +14,7 @@ def load_data():
     if os.path.exists(DATA_FILE):
         return pd.read_csv(DATA_FILE)
     else:
-        return pd.DataFrame(columns=["年月日", "入力時間", "大項目", "中項目", "金額", "メモ", "氏名"])
+        return pd.DataFrame(columns=["年月日", "入力時間", "金額", "大項目", "中項目", "メモ", "氏名"])
 
 # データを保存する関数
 def save_data():
