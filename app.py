@@ -40,7 +40,7 @@ with tab1:
         col1, col2 = st.columns(2)
         with col1:
             date = st.date_input("年月日", value=datetime.today())
-            name = st.selectbox("氏名", ["Aさん", "Bさん"])
+            name = st.selectbox("氏名", ["たう", "萌伽"])
             amount = st.number_input("金額", min_value=0, value=0, step=100)
 
         with col2:
