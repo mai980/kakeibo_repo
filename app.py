@@ -60,8 +60,8 @@ with tab1:
         date = st.date_input("支払日", value=datetime.today())
         date = date.strftime("%Y-%m-%d")  # `date` を文字列に変換
         
-        jst = pytz.timezone('Asia/Tokyo')
-        input_YMD = datetime.now(jst).strftime('%Y%m%d')
+        # jst = pytz.timezone('Asia/Tokyo')
+        input_YMD = datetime.now().strftime('%Y%m%d')
         payment_person = st.selectbox('支払い者', ['たう', '萌伽', '割勘'])
         user_name = st.selectbox("購入品使用者", ["たう", "萌伽", "共用"])
         
