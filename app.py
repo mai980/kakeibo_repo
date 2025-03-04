@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
+import pytz
 
 # 保存するCSVファイル名
 DATA_FILE = "./kakeibo_data.csv"
@@ -58,7 +59,9 @@ with tab1:
     with st.form("input_form", clear_on_submit = True):
         date = st.date_input("支払日", value=datetime.today())
         date = date.strftime("%Y-%m-%d")  # `date` を文字列に変換
-        input_YMD = datetime.now().strftime('%Y%m%d')
+        
+        jst = pytz.timezone('Asia/Tokyo')
+        input_YMD = datetime.now(jst).strftime('%Y%m%d')
         payment_person = st.selectbox('支払い者', ['たう', '萌伽', '割勘'])
         user_name = st.selectbox("購入品使用者", ["たう", "萌伽", "共用"])
         
