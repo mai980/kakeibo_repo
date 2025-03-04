@@ -181,7 +181,7 @@ with tab2:
         st.write(f"<p style='font-size:36px; font-weight:bold;'>たうが萌伽に{T_payment - M_payment}円支払う</p>", unsafe_allow_html=True)
     elif T_payment > M_payment:
         st.write(f"<p style='font-size:36px; font-weight:bold;'>萌伽がたうに{M_payment - T_payment}円支払う</p>", unsafe_allow_html=True)
-    else:
+    elif T_payment == M_payment:
         st.write('お互いに支払う金額はない')
     
     # データフレームを表示
