@@ -51,7 +51,7 @@ if "memo" not in st.session_state:
     st.session_state.memo = ""
 
 # タブメニュー
-tab1, tab2 = st.tabs(["📋 家計簿入力", "💰今月の折半金額"])
+tab1, tab2, tab3 = st.tabs(["📋 家計簿入力", "💰今月の折半金額", "サマリ"])
 
 # ---------------- 家計簿入力タブ ----------------
 with tab1:
@@ -173,10 +173,10 @@ with tab2:
     with col2:
         st.write('萌伽がたうに支払う金額')
         st.write(f"<p style='font-size:36px; font-weight:bold;'>{M_payment}円</p>", unsafe_allow_html=True)
-        
+        # st.write(df_2)
     if T_payment > M_payment:
         st.write(f"<p style='font-size:36px; font-weight:bold;'>たうが萌伽に{T_payment - M_payment}円支払う</p>", unsafe_allow_html=True)
-    elif T_payment < M_payment:
+    elif T_payment > M_payment:
         st.write(f"<p style='font-size:36px; font-weight:bold;'>萌伽がたうに{M_payment - T_payment}円支払う</p>", unsafe_allow_html=True)
     else:
         st.write('お互いに支払う金額はない')
