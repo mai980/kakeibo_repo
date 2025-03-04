@@ -99,7 +99,8 @@ with tab1:
     st.subheader("入力データ")
 
     if not st.session_state.data.empty:
-        st.dataframe(st.session_state.data, height=300)
+        # st.dataframe(st.session_state.data, height=300)
+        st.write(st.session_state.data)
 
         # 削除する行の選択
         selected_rows = st.multiselect("削除する行を選択", st.session_state.data.index.tolist())
