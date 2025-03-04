@@ -169,17 +169,18 @@ with tab2:
     with col1:
         st.write('たうが萌伽に支払う金額')
         st.write(f"<p style='font-size:36px; font-weight:bold;'>{T_payment}円</p>", unsafe_allow_html=True)
-        # st.write(df_1)
+        
     with col2:
         st.write('萌伽がたうに支払う金額')
         st.write(f"<p style='font-size:36px; font-weight:bold;'>{M_payment}円</p>", unsafe_allow_html=True)
-        # st.write(df_2)
+        
     if T_payment > M_payment:
         st.write(f"<p style='font-size:36px; font-weight:bold;'>たうが萌伽に{T_payment - M_payment}円支払う</p>", unsafe_allow_html=True)
     elif T_payment < M_payment:
         st.write(f"<p style='font-size:36px; font-weight:bold;'>萌伽がたうに{M_payment - T_payment}円支払う</p>", unsafe_allow_html=True)
     else:
         st.write('お互いに支払う金額はない')
+    
     # データフレームを表示
     if st.button('選択した年月の家計簿データを表示'):
         st.write(f"選択された年月の家計簿データ: {selected_month}")
