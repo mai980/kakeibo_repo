@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
-import pytz
+# import pytz
 
 # 保存するCSVファイル名
 DATA_FILE = "./kakeibo_data.csv"
@@ -62,13 +62,19 @@ with tab1:
         
         # jst = pytz.timezone('Asia/Tokyo')
         input_YMD = datetime.now().strftime('%Y%m%d')
-        payment_person = st.selectbox('支払い者', ['たう', '萌伽', '割勘'])
-        user_name = st.selectbox("購入品使用者", ["たう", "萌伽", "共用"])
+        
+        # **支払い者（ラジオボタン）**
+        payment_person = st.radio(label = "🧾 支払い者を選択", options = ("たう", "萌伽"))
+        st.write(payment_person)
+
+        # **購入品使用者（ラジオボタン）**
+        user_name = st.radio(label = "🛍️ 購入品使用者を選択", options = ("たう", "萌伽", "共用"))
+        st.write(user_name)
         
         # 各ウィジェットに key を設定（st.session_state に紐づける）
         amount = st.number_input("金額", min_value=0, step=100, key="amount")
         category_large = st.selectbox("カテゴリ", st.session_state.categories)
-        category_other = st.text_area('その他のカテゴリ', help="カテゴリ一覧にない場合はこちらに記載してください", key="category_other")
+        category_other = st.text_area('その他のカテゴリ', help="カテゴリ一覧にない場合はこちらに記載してください。なお、カテゴリは「その他」を選択してください", key="category_other")
         memo = st.text_area("メモ", height=100, help="具体的に購入したものや特記事項があれば記載してください", key="memo")
 
         submitted = st.form_submit_button("追加")
@@ -144,7 +150,7 @@ with tab2:
     selected_month_num = int(selected_month[5:7])  # mm
     selected_yyyymm = selected_year * 100 + selected_month_num  # 数値型の yyyymm
 
-    st.subheader(f"{selected_month} の2人の折半金額")
+    st.subheader(f"{selected_month} の2人の折半金額まとめ")
 
     df = pd.read_csv(DATA_FILE)
     df['支払日'] = pd.to_datetime(df['支払日'])
@@ -154,35 +160,36 @@ with tab2:
 
     # 使う人がTさんで、支払った人がMさんの場合、そのデータフレームの金額をTさんが全額払う
     df_1 = df[(df['購入品使用者'] == 'たう') & (df['支払い者'] == '萌伽')]
-    T_payment = df_1['金額'].sum()
+    pay_from_T_to_M = df_1['金額'].sum()
 
     # 使う人がMさんで、支払った人がTさんの場合、そのデータフレームの金額をMさんが全額払う
     df_2 = df[(df['購入品使用者'] == '萌伽') & (df['支払い者'] == 'たう')]
-    M_payment = df_2['金額'].sum()
+    pay_from_M_to_T = df_2['金額'].sum()
 
     # 使う人はTさんMさんの共用で、支払った人がTさんの場合、Mさんに半分の金額を支払う
     df_12 = df[(df['購入品使用者'] == '共用') & (df['支払い者'] == 'たう')]
-    # 使う人はTさんMさんの共用で、支払った人がMさんの場合、Mさんに半分の金額を支払う
+    # 使う人はTさんMさんの共用で、支払った人がMさんの場合、Tさんに半分の金額を支払う
     df_21 = df[(df['購入品使用者'] == '共用') & (df['支払い者'] == '萌伽')]
 
     # T_paymentとM_paymentにそれぞれ折半する金額をプラス
-    T_payment += df_12['金額'].sum()//2
-    M_payment += df_21['金額'].sum()//2
+    pay_from_M_to_T += df_12['金額'].sum() // 2
+    pay_from_T_to_M += df_21['金額'].sum() // 2
 
     col1, col2 = st.columns(2)
     with col1:
         st.write('たうが萌伽に支払う金額')
-        st.write(f"<p style='font-size:36px; font-weight:bold;'>{T_payment}円</p>", unsafe_allow_html=True)
+        st.write(f"<p style='font-size:36px; font-weight:bold;'>{pay_from_T_to_M}円</p>", unsafe_allow_html=True)
         
     with col2:
         st.write('萌伽がたうに支払う金額')
-        st.write(f"<p style='font-size:36px; font-weight:bold;'>{M_payment}円</p>", unsafe_allow_html=True)
+        st.write(f"<p style='font-size:36px; font-weight:bold;'>{pay_from_M_to_T}円</p>", unsafe_allow_html=True)
         # st.write(df_2)
-    if T_payment > M_payment:
-        st.write(f"<p style='font-size:36px; font-weight:bold;'>たうが萌伽に{T_payment - M_payment}円支払う</p>", unsafe_allow_html=True)
-    elif T_payment > M_payment:
-        st.write(f"<p style='font-size:36px; font-weight:bold;'>萌伽がたうに{M_payment - T_payment}円支払う</p>", unsafe_allow_html=True)
-    elif T_payment == M_payment:
+    
+    if pay_from_T_to_M > pay_from_M_to_T:
+        st.write(f"<p style='font-size:36px; font-weight:bold;'>たうが萌伽に{pay_from_T_to_M - pay_from_M_to_T}円支払う</p>", unsafe_allow_html=True)
+    elif pay_from_T_to_M < pay_from_M_to_T:
+        st.write(f"<p style='font-size:36px; font-weight:bold;'>萌伽がたうに{pay_from_M_to_T - pay_from_T_to_M}円支払う</p>", unsafe_allow_html=True)
+    elif pay_from_T_to_M == pay_from_M_to_T:
         st.write('お互いに支払う金額はない')
     
     # データフレームを表示
@@ -191,3 +198,8 @@ with tab2:
         # 文字列型に変更
         df['支払日'] = df['支払日'].dt.strftime('%Y-%m-%d')
         st.dataframe(df.fillna('未入力'))
+
+
+with tab3:
+    df = pd.read_csv(DATA_FILE)
+    st.dataframe(df)
