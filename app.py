@@ -201,5 +201,6 @@ with tab2:
 
 
 with tab3:
+    st.write(f"<p style='font-size:36px; font-weight:bold;'>開発中</p>", unsafe_allow_html=True)
     df = pd.read_csv(DATA_FILE)
     st.dataframe(df)
